@@ -2,7 +2,6 @@ package com.gutors.lil.fid;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
 import com.gutors.lil.fid.service.GreetingService;
@@ -18,16 +17,12 @@ public class ApplicationConfig {
     @Value("${app.name}")
     private String name;
 
-    @Bean
-    @Profile("!dev")
-    public TimeService timeService() {
-        return new TimeService(true);
-    }
+    @Value("#{new Boolean(environment['spring.profiles.active']!='dev')}")
+    private boolean is24;
 
     @Bean
-    @Profile("dev")
-    public TimeService devTimeService() {
-        return new TimeService(false);
+    public TimeService timeService() {
+        return new TimeService(is24);
     }
 
     @Bean
