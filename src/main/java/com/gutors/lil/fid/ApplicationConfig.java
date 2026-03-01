@@ -2,6 +2,7 @@ package com.gutors.lil.fid;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
 import com.gutors.lil.fid.service.GreetingService;
@@ -18,8 +19,15 @@ public class ApplicationConfig {
     private String name;
 
     @Bean
+    @Profile("!dev")
     public TimeService timeService() {
         return new TimeService(true);
+    }
+
+    @Bean
+    @Profile("dev")
+    public TimeService devTimeService() {
+        return new TimeService(false);
     }
 
     @Bean
