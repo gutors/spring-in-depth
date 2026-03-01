@@ -2,15 +2,20 @@ package com.gutors.lil.fid;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 
 import com.gutors.lil.fid.service.GreetingService;
 import com.gutors.lil.fid.service.OutputService;
 import com.gutors.lil.fid.service.TimeService;
 
+@PropertySource("classpath:application.properties")
 public class ApplicationConfig {
     
-    @Value("Hello")
-    String greetingMessage;
+    @Value("${app.greeting}")
+    private String greetingMessage;
+
+    @Value("${app.name}")
+    private String name;
 
     @Bean
     public TimeService timeService() {
@@ -19,7 +24,7 @@ public class ApplicationConfig {
 
     @Bean
     public OutputService outputService(GreetingService greetingService, TimeService timeService) {
-        return new OutputService(greetingService, timeService);
+        return new OutputService(greetingService, timeService, name);
     }
 
     @Bean
