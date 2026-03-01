@@ -1,17 +1,23 @@
 package com.gutors.lil.fid.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+@Service
 public class OutputService {
 
     private final GreetingService greetingService;
     private final TimeService timeService;
-    private final String name;
 
+    @Value("${app.name}")
+    private String name;
+
+    // Dont need to use @Autowired because this is the only constructor 
+    // and Spring will automatically use it to inject dependencies
     public OutputService(GreetingService greetingService, 
-        TimeService timeService, 
-        String name){
+        TimeService timeService){
         this.greetingService = greetingService;
         this.timeService = timeService;
-        this.name = name;
     }
 
     public void generateOutput(){
