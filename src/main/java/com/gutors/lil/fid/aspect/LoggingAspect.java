@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -21,6 +23,23 @@ public class LoggingAspect {
     @Pointcut("@annotation(Loggable)")
     public void executeLogging() {
         // do nothing
+    }
+
+    @Around("executeLogging()")
+    public Object logMethodExecution(ProceedingJoinPoint pjp) throws Throwable {
+        long startTime = System.currentTimeMillis();
+
+        //Here the method will be executed and the return value will be captured
+        Object returnValue = pjp.proceed();
+
+        long totalTime = System.currentTimeMillis() - startTime;
+        StringBuilder sb = new StringBuilder("Method=");
+        sb.append(pjp.getSignature().getName());
+        sb.append(" executed in ").append(totalTime).append("ms");
+
+        LOGGER.info(sb.toString());
+
+        return returnValue;
     }
 
     // execute this before the main @Pointcut method
@@ -44,7 +63,7 @@ public class LoggingAspect {
 
     // execute this after the main @Pointcut method and log the return value
     @AfterReturning(pointcut = "executeLogging()", returning = "returnValue")
-    public void logMethodExecution(JoinPoint joinPoint, Object returnValue) {
+    public void logMethodAfterExecution(JoinPoint joinPoint, Object returnValue) {
         StringBuilder sb = new StringBuilder("Method=");
         sb.append(joinPoint.getSignature().getName());
        
