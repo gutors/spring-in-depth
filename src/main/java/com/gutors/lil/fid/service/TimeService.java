@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.gutors.lil.fid.aspect.Countable;
+
 @Service
 public class TimeService {
 
@@ -19,6 +21,7 @@ public class TimeService {
         super();
     }
 
+    @Countable
     public String getCurrentTime(){
         LocalDateTime now = LocalDateTime.now();
         if (is24) {
